@@ -1,0 +1,2 @@
+git remote add origin https://github.com/studiovendittoquarto/gestionale-pediatrico.git
+git push -u origin main

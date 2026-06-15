@@ -1,0 +1,18 @@
+# Blueprint Render: deploy automatico di backend + frontend in un unico servizio.
+# Vai su https://render.com -> New -> Blueprint -> collega questo repo.
+services:
+  - type: web
+    name: gestionale-pediatrico
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: APP_USERNAME
+        sync: false
+      - key: APP_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false

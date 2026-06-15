@@ -9,8 +9,21 @@ import SpecialistsModal from './components/SpecialistsModal';
 export default function App() {
   const [loggato, setLoggato] = useState(!!getToken());
   const [specialisti, setSpecialisti] = useState([]);
-  const [tabAttivo, setTabAttivo] = useState('Pediatra'); // nome dello specialista attivo
+  const [tabAttivo, setTabAttivo] = useState('Pediatra'); // chiave interna dello specialista attivo
+  // Nome visualizzato per il tab fisso "Pediatra", personalizzabile e salvato sul dispositivo
+  const [pediatraLabel, setPediatraLabel] = useState(
+    () => localStorage.getItem('gp_pediatra_label') || 'Dott. VENDITTO'
+  );
   const [modale, setModale] = useState(false);
+
+  // Nome da mostrare: per il tab fisso usa l'etichetta personalizzata
+  const nomeVisibile = (s) => (s === 'Pediatra' ? pediatraLabel : s);
+
+  function rinominaPediatra(nuovo) {
+    const v = (nuovo || '').trim() || 'Pediatra';
+    setPediatraLabel(v);
+    localStorage.setItem('gp_pediatra_label', v);
+  }
   const [tick, setTick] = useState(0); // incrementato ad ogni evento real-time -> fa ricaricare le liste
   const [online, setOnline] = useState(false);
   const [toast, setToast] = useState(null);
@@ -83,7 +96,7 @@ export default function App() {
             className={'tab ' + (isPediatra ? 'tab-on' : '')}
             onClick={() => setTabAttivo('Pediatra')}
           >
-            Pediatra
+            {pediatraLabel}
           </button>
           {specialisti.map((s) => (
             <button
@@ -107,18 +120,24 @@ export default function App() {
 
       <main className="layout">
         <section className="col-sx">
-          <h2 className="col-title">Nuovo appuntamento · {tabAttivo}</h2>
-          <BookingForm key={tabAttivo} specialista={tabAttivo} isPediatra={isPediatra} tick={tick} notify={notify} />
+          <h2 className="col-title">Nuovo appuntamento · {nomeVisibile(tabAttivo)}</h2>
+          <BookingForm key={tabAttivo} specialista={tabAttivo} nomeVisibile={nomeVisibile(tabAttivo)} isPediatra={isPediatra} tick={tick} notify={notify} />
         </section>
 
         <section className="col-dx">
-          <h2 className="col-title">Agenda · {tabAttivo}</h2>
+          <h2 className="col-title">Agenda · {nomeVisibile(tabAttivo)}</h2>
           <BookingList specialista={tabAttivo} tick={tick} notify={notify} />
         </section>
       </main>
 
       {modale && (
-        <SpecialistsModal specialisti={specialisti} onClose={() => setModale(false)} notify={notify} />
+        <SpecialistsModal
+          specialisti={specialisti}
+          pediatraLabel={pediatraLabel}
+          onRenamePediatra={rinominaPediatra}
+          onClose={() => setModale(false)}
+          notify={notify}
+        />
       )}
 
       {toast && <div className={'toast ' + (toast.errore ? 'toast-err' : '')}>{toast.msg}</div>}

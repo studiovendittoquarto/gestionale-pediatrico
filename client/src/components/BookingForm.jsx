@@ -10,7 +10,7 @@ import {
 
 const MAX_PER_SLOT = 2;
 
-export default function BookingForm({ specialista, isPediatra, tick, notify }) {
+export default function BookingForm({ specialista, nomeVisibile, isPediatra, tick, notify }) {
   // Minuteria personale per ogni specialista, salvata nel localStorage
   const [intervallo, setIntervallo] = useState(() => {
     const v = localStorage.getItem(chiaveIntervallo(specialista));
@@ -89,7 +89,7 @@ export default function BookingForm({ specialista, isPediatra, tick, notify }) {
   return (
     <form className="glass panel form-panel" onSubmit={salva}>
       <div className="form-top">
-        <label className="lbl">⏱️ Durata visita ({specialista})</label>
+        <label className="lbl">⏱️ Durata visita ({nomeVisibile || specialista})</label>
         <div className="interval-row">
           {INTERVALLI.map((v) => (
             <button

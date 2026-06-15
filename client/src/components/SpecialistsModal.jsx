@@ -1,9 +1,15 @@
 import { useState } from 'react';
 import { api } from '../api';
 
-export default function SpecialistsModal({ specialisti, onClose, notify }) {
+export default function SpecialistsModal({ specialisti, pediatraLabel, onRenamePediatra, onClose, notify }) {
   const [nome, setNome] = useState('');
   const [busy, setBusy] = useState(false);
+  const [labelPediatra, setLabelPediatra] = useState(pediatraLabel);
+
+  function salvaNomePediatra() {
+    onRenamePediatra(labelPediatra);
+    notify('Nome aggiornato ✅');
+  }
 
   async function aggiungi(e) {
     e.preventDefault();
@@ -49,9 +55,16 @@ export default function SpecialistsModal({ specialisti, onClose, notify }) {
 
         <div className="spec-list">
           <div className="spec-row fixed">
-            <span>🩺 Pediatra</span>
-            <span className="spec-fisso">fisso</span>
+            <span>🩺</span>
+            <input
+              className="rename-input"
+              value={labelPediatra}
+              onChange={(e) => setLabelPediatra(e.target.value)}
+              placeholder="Es. Dott. VENDITTO"
+            />
+            <button className="btn-ok small" onClick={salvaNomePediatra}>Salva nome</button>
           </div>
+          <p className="rename-hint">Questo è il tab principale (Pediatra): puoi rinominarlo come preferisci.</p>
           {specialisti.length === 0 && (
             <p className="vuoto">Nessuno specialista aggiunto.</p>
           )}

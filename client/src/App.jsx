@@ -5,6 +5,7 @@ import Login from './components/Login';
 import BookingForm from './components/BookingForm';
 import BookingList from './components/BookingList';
 import SpecialistsModal from './components/SpecialistsModal';
+import AssistantWidget from './assistant/AssistantWidget';
 
 export default function App() {
   const [loggato, setLoggato] = useState(!!getToken());
@@ -141,6 +142,9 @@ export default function App() {
       )}
 
       {toast && <div className={'toast ' + (toast.errore ? 'toast-err' : '')}>{toast.msg}</div>}
+
+      {/* Assistente AI fluttuante — modulo isolato, non interferisce col gestionale */}
+      <AssistantWidget />
     </div>
   );
 }

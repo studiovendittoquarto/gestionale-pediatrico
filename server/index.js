@@ -23,7 +23,7 @@ const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: '*' } });
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '12mb' })); // limite alto per le foto inviate all'assistente
 
 // ---------- Autenticazione (credenziale unica condivisa) ----------
 function makeToken() {
@@ -181,6 +181,10 @@ app.delete('/api/bookings/:id', authMiddleware, async (req, res) => {
     res.status(500).json({ error: 'Errore database' });
   }
 });
+
+// ---------- Assistente AI (modulo isolato, sotto /api/assistant) ----------
+const assistantRouter = require('./assistant');
+app.use('/api/assistant', authMiddleware, assistantRouter);
 
 // ---------- Health check (utile per keep-alive) ----------
 app.get('/api/health', (req, res) => res.json({ ok: true }));

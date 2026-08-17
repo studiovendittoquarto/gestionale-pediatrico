@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { api } from '../api';
 import { oggiISO, dataLeggibile } from '../helpers';
 
-export default function BookingList({ specialista, tick, notify }) {
-  const [data, setData] = useState(oggiISO());
+// La data arriva da App: è la stessa del form a sinistra, così le due colonne
+// mostrano sempre lo stesso giorno.
+export default function BookingList({ specialista, data, setData, tick, notify }) {
   const [bookings, setBookings] = useState([]);
   const [caricamento, setCaricamento] = useState(false);
 

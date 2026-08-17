@@ -4,20 +4,17 @@ import {
   TIPI_PEDIATRA,
   INTERVALLI,
   generaSlot,
-  oggiISO,
   chiaveIntervallo,
+  leggiIntervallo,
 } from '../helpers';
 
 const MAX_PER_SLOT = 2;
 
-export default function BookingForm({ specialista, nomeVisibile, isPediatra, tick, notify }) {
-  // Minuteria personale per ogni specialista, salvata nel localStorage
-  const [intervallo, setIntervallo] = useState(() => {
-    const v = localStorage.getItem(chiaveIntervallo(specialista));
-    return v ? Number(v) : 15;
-  });
+// data/setData arrivano da App: sono condivise con l'agenda a destra.
+export default function BookingForm({ specialista, nomeVisibile, isPediatra, data, setData, tick, notify }) {
+  // Minuteria personale per ogni specialista, salvata nel localStorage (default 10 min)
+  const [intervallo, setIntervallo] = useState(() => leggiIntervallo(specialista));
 
-  const [data, setData] = useState(oggiISO());
   const [orario, setOrario] = useState('');
   const [tipo, setTipo] = useState('Visita');
   const [cognome, setCognome] = useState('');
@@ -28,11 +25,15 @@ export default function BookingForm({ specialista, nomeVisibile, isPediatra, tic
 
   // Quando cambio specialista ricarico la sua minuteria salvata
   useEffect(() => {
-    const v = localStorage.getItem(chiaveIntervallo(specialista));
-    setIntervallo(v ? Number(v) : 15);
+    setIntervallo(leggiIntervallo(specialista));
     setTipo('Visita');
     setOrario('');
   }, [specialista]);
+
+  // Cambiando giorno l'orario scelto non è più valido (i posti liberi sono altri)
+  useEffect(() => {
+    setOrario('');
+  }, [data]);
 
   // Salva la minuteria del singolo specialista
   function cambiaIntervallo(v) {

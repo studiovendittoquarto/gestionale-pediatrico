@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api, getToken, clearToken } from './api';
+import { oggiISO } from './helpers';
 import { socket } from './socket';
 import Login from './components/Login';
 import BookingForm from './components/BookingForm';
@@ -16,6 +17,8 @@ export default function App() {
     () => localStorage.getItem('gp_pediatra_label') || 'Dott. VENDITTO'
   );
   const [modale, setModale] = useState(false);
+  // Giorno unico condiviso: form (sinistra) e agenda (destra) restano sempre allineati
+  const [data, setData] = useState(oggiISO());
 
   // Nome da mostrare: per il tab fisso usa l'etichetta personalizzata
   const nomeVisibile = (s) => (s === 'Pediatra' ? pediatraLabel : s);
@@ -122,12 +125,21 @@ export default function App() {
       <main className="layout">
         <section className="col-sx">
           <h2 className="col-title">Nuovo appuntamento · {nomeVisibile(tabAttivo)}</h2>
-          <BookingForm key={tabAttivo} specialista={tabAttivo} nomeVisibile={nomeVisibile(tabAttivo)} isPediatra={isPediatra} tick={tick} notify={notify} />
+          <BookingForm
+            key={tabAttivo}
+            specialista={tabAttivo}
+            nomeVisibile={nomeVisibile(tabAttivo)}
+            isPediatra={isPediatra}
+            data={data}
+            setData={setData}
+            tick={tick}
+            notify={notify}
+          />
         </section>
 
         <section className="col-dx">
           <h2 className="col-title">Agenda · {nomeVisibile(tabAttivo)}</h2>
-          <BookingList specialista={tabAttivo} tick={tick} notify={notify} />
+          <BookingList specialista={tabAttivo} data={data} setData={setData} tick={tick} notify={notify} />
         </section>
       </main>
 

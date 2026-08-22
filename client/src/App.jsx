@@ -7,6 +7,7 @@ import BookingForm from './components/BookingForm';
 import BookingList from './components/BookingList';
 import SpecialistsModal from './components/SpecialistsModal';
 import AssistantWidget from './assistant/AssistantWidget';
+import ExternalTools from './external/ExternalTools';
 
 export default function App() {
   const [loggato, setLoggato] = useState(!!getToken());
@@ -115,6 +116,7 @@ export default function App() {
         </nav>
 
         <div className="top-right">
+          <ExternalTools variante="topbar" notify={notify} />
           <span className={'dot ' + (online ? 'dot-on' : 'dot-off')} title={online ? 'Sincronizzato in tempo reale' : 'Riconnessione…'}>
             {online ? '● Live' : '○ Offline'}
           </span>

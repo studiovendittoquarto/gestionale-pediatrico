@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { assistantApi, fileToImagePart } from './assistantApi';
+import ExternalTools from '../external/ExternalTools';
 import './assistant.css';
 
 // Assistente fluttuante non invasivo: bolla in basso a destra che si apre
@@ -101,6 +102,10 @@ export default function AssistantWidget() {
           </div>
 
           <div className="ai-disclaimer">⚕️ {disclaimer || 'Strumento di supporto non vincolante. La decisione clinica spetta al medico.'}</div>
+
+          {/* Scorciatoie ai servizi esterni: si aprono nel loro sito ufficiale,
+              in una finestra affiancata (non sono incorporabili nella pagina). */}
+          <ExternalTools variante="pannello" />
 
           <div className="ai-messaggi">
             {messaggi.map((m, i) => (
